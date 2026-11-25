@@ -1,0 +1,6 @@
+{
+  "name": "Mushroom Monitoring System",
+  "description": "Smart mushroom cultivation chamber monitoring dashboard with live simulated ESP32 temperature, humidity, and air quality telemetry, interactive charts, history logs, and environmental alerts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

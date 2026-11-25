@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MycoMonitor — Smart Mushroom Cultivation Monitoring System</title>
+    <meta
+      name="description"
+      content="MycoMonitor is a smart mushroom cultivation monitoring and farm management platform for multi-room temperature, humidity, CO2 telemetry, batch tracking, environmental analytics, and ESP32 hardware management."
+    />
+    <meta property="og:title" content="MycoMonitor — Smart Mushroom Cultivation Monitoring System" />
+    <meta
+      property="og:description"
+      content="Multi-room IoT mushroom farm monitoring dashboard for environment telemetry, batch lifecycle management, analytics, alerts, and ESP32 devices."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+
+      <!-- ==================== SIDEBAR NAVIGATION ==================== -->
+      <aside class="sidebar" id="sidebar" aria-label="Primary Navigation">
+        <div class="sidebar-brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 28 28" width="22" height="22" fill="none">
+              <path
+                d="M14 4C7.925 4 3 8.477 3 14.2c0 1.48.94 2.4 2.35 2.4h17.3c1.41 0 2.35-.92 2.35-2.4C25 8.477 20.075 4 14 4Z"
+                fill="currentColor"
+                opacity="0.18"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+              <path
+                d="M11 16.6v5.1c0 1.27 1.03 2.3 2.3 2.3h1.4c1.27 0 2.3-1.03 2.3-2.3v-5.1"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+              <circle cx="10.2" cy="10.5" r="1.1" fill="currentColor" />
+              <circle cx="15.8" cy="9.2" r="0.95" fill="currentColor" />
+              <circle cx="18.3" cy="12.3" r="0.85" fill="currentColor" />
+            </svg>
+          </div>
+          <div class="brand-text-group">
+            <span class="brand-name">MycoMonitor</span>
+            <span class="brand-tagline">Cultivation Telemetry</span>
+          </div>
+          <button
+            type="button"
+            class="sidebar-close-btn"
+            id="sidebar-close-btn"
+            aria-label="Close navigation menu"
+          >
+            <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M5 5l10 10M15 5L5 15" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Platform sections">
+          <button type="button" class="nav-item is-active" data-page="overview" aria-current="page">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7">
+              <rect x="3" y="3" width="6" height="6" rx="1.4" />
+              <rect x="11" y="3" width="6" height="6" rx="1.4" />
+              <rect x="3" y="11" width="6" height="6" rx="1.4" />
+              <rect x="11" y="11" width="6" height="6" rx="1.4" />
+            </svg>
+            <span class="nav-label">Overview</span>
+          </button>
+
+          <button type="button" class="nav-item" data-page="live">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7">
+              <path d="M2.5 11h3l2-5.5L10.5 15l2.5-6.5 1.5 2.5h3" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="nav-label">Live Monitoring</span>
+          </button>
+
+          <button type="button" class="nav-item" data-page="rooms">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7">
+              <path d="M3 8.5L10 3.5l7 5V16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.5Z" stroke-linejoin="round" />
+              <path d="M8 17v-5h4v5" stroke-linejoin="round" />
+            </svg>
+            <span class="nav-label">Growing Rooms</span>
+          </button>
+
+          <button type="button" class="nav-item" data-page="batches">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7">
+              <path d="M4 6.5L10 3.5l6 3v7l-6 3-6-3v-7Z" stroke-linejoin="round" />
+              <path d="M4 6.5l6 3 6-3M10 9.5v7" stroke-linejoin="round" />
+            </svg>
+            <span class="nav-label">Cultivation Batches</span>
+          </button>
+
+          <button type="button" class="nav-item" data-page="analytics">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7">
+              <path d="M3.5 16.5h13" stroke-linecap="round" />
+              <path d="M6 16.5V11M10 16.5V7M14 16.5V4.5" stroke-linecap="round" stroke-width="2" />
+            </svg>
+            <span class="nav-label">Analytics</span>
+          </button>
+
+          <button type="button" class="nav-item" data-page="alerts">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7">
+              <path d="M10 3.2L2.8 16h14.4L10 3.2Z" stroke-linejoin="round" />
+              <path d="M10 8.2v3.6M10 13.8h.01" stroke-linecap="round" />
+            </svg>
+            <span class="nav-label">Alert Management</span>
+            <span class="nav-count" id="nav-alert-count">0</span>
+          </button>
+
+          <button type="button" class="nav-item" data-page="devices">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7">
+              <rect x="5" y="5" width="10" height="10" rx="1.5" />
+              <path d="M8 2.5v2.5M12 2.5v2.5M8 15v2.5M12 15v2.5M2.5 8H5M2.5 12H5M15 8h2.5M15 12h2.5" stroke-linecap="round" />
+            </svg>
+            <span class="nav-label">Device Management</span>
+          </button>
+
+          <button type="button" class="nav-item" data-page="settings">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7">
+              <circle cx="10" cy="10" r="2.6" />
+              <path
+                d="M10 2.8v1.6M10 15.6v1.6M4.9 4.9l1.1 1.1M14 14l1.1 1.1M2.8 10h1.6M15.6 10h1.6M4.9 15.1L6 14M14 6l1.1-1.1"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span class="nav-label">Settings</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="sidebar-meta-block">
+            <span class="sidebar-meta-label">Platform Status</span>
+            <strong class="sidebar-meta-value">DEMO MODE (Simulated)</strong>
+          </div>
+          <div class="sidebar-meta-block">
+            <span class="sidebar-meta-label">Hardware Adapter</span>
+            <span class="sidebar-meta-sub" id="sidebar-adapter-label">DemoSensorProvider · 5s cycle</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ==================== MAIN WORKSPACE ==================== -->
+      <div class="workspace">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button
+              type="button"
+              class="mobile-menu-btn"
+              id="mobile-menu-btn"
+              aria-label="Open navigation menu"
+              aria-expanded="false"
+              aria-controls="sidebar"
+            >
+              <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 5.5h14M3 10h14M3 14.5h14" stroke-linecap="round" />
+              </svg>
+            </button>
+            <div class="topbar-heading">
+              <div class="topbar-breadcrumb">
+                <span>MycoMonitor</span>
+                <span aria-hidden="true">/</span>
+                <span id="topbar-section-name">Overview</span>
+              </div>
+              <h1 class="page-title" id="page-title">Farm Overview Dashboard</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <div class="demo-mode-banner" role="status" aria-live="polite" title="Simulated readings only — not real ESP32 hardware data">
+              <span class="demo-mode-tag">DEMO MODE</span>
+              <span class="demo-mode-cadence" id="next-update-label">Simulated · 5s</span>
+            </div>
+
+            <label class="sr-only" for="global-room-select">Active Growing Room</label>
+            <select id="global-room-select" class="room-select" aria-label="Select growing room"></select>
+
+            <button type="button" class="btn btn-secondary" id="global-refresh-btn" title="Force immediate simulated sensor sample">
+              <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M16.5 10a6.5 6.5 0 1 1-1.7-4.4M16.5 3.5v3h-3" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Refresh</span>
+            </button>
+
+            <button type="button" class="btn btn-primary" id="toggle-stream-btn">Pause Feed</button>
+          </div>
+        </header>
+
+        <main class="main-content">
+          <!-- ==================== 1. OVERVIEW DASHBOARD ==================== -->
+          <section class="page-view is-active" id="page-overview" aria-labelledby="page-title">
+            <!-- Top 4 Farm KPI Cards -->
+            <div class="kpi-grid-4">
+              <article class="panel kpi-panel">
+                <span class="metric-label">Total Monitoring Rooms</span>
+                <div class="kpi-value-row">
+                  <strong class="kpi-value mono-num" id="ov-total-rooms">4</strong>
+                  <span class="kpi-sub">Active bays</span>
+                </div>
+                <span class="kpi-footnote" id="ov-rooms-footnote">4 varieties under telemetry</span>
+              </article>
+
+              <article class="panel kpi-panel">
+                <span class="metric-label">Connected Devices</span>
+                <div class="kpi-value-row">
+                  <strong class="kpi-value mono-num" id="ov-connected-devices">4 / 4</strong>
+                  <span class="status-text-indicator is-optimal" id="ov-device-status">Online</span>
+                </div>
+                <span class="kpi-footnote">ESP32 nodes (Simulated)</span>
+              </article>
+
+              <article class="panel kpi-panel">
+                <span class="metric-label">Active Alerts</span>
+                <div class="kpi-value-row">
+                  <strong class="kpi-value mono-num" id="ov-active-alerts">0</strong>
+                  <span class="status-text-indicator is-optimal" id="ov-alert-severity-tag">Normal</span>
+                </div>
+                <span class="kpi-footnote" id="ov-alerts-footnote">All thresholds nominal</span>
+              </article>
+
+              <article class="panel kpi-panel" id="ov-health-panel">
+                <span class="metric-label">Environment Health</span>
+                <div class="kpi-value-row">
+                  <strong class="kpi-health-text" id="ov-health-label">Optimal</strong>
+                  <span class="kpi-sub mono-num" id="ov-health-score">100%</span>
+                </div>
+                <span class="kpi-footnote" id="ov-health-footnote">Within cultivation targets</span>
+              </article>
+            </div>
+
+            <!-- Selected Room Live Readout (Temp, Humidity, CO2) -->
+            <div class="section-subheader">
+              <div>
+                <h2 class="section-heading" id="ov-focus-room-heading">Room Telemetry: RM-01 North Fruiting Bay</h2>
+                <p class="panel-subtitle" id="ov-focus-room-sub">
+                  Simulated readings · Updated <span class="mono-num" id="ov-last-updated">--:--:--</span>
+                </p>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" data-jump-page="live">
+                Open Live Monitoring
+              </button>
+            </div>
+
+            <div class="metrics-grid">
+              <article class="panel metric-card">
+                <div class="metric-card-top">
+                  <span class="metric-label">Temperature</span>
+                  <span class="status-text-indicator is-optimal" id="ov-temp-status">Normal</span>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-value mono-num" id="ov-temp-val">--.-</span>
+                  <span class="metric-unit">°C</span>
+                </div>
+                <div class="range-track" aria-hidden="true">
+                  <div class="range-optimal-zone" id="ov-temp-zone"></div>
+                  <div class="range-marker" id="ov-temp-marker"></div>
+                </div>
+                <div class="metric-footer">
+                  <span id="ov-temp-target">Target: 18.0 – 24.0 °C</span>
+                  <span class="mono-num" id="ov-temp-delta">Δ 0.0 °C</span>
+                </div>
+              </article>
+
+              <article class="panel metric-card">
+                <div class="metric-card-top">
+                  <span class="metric-label">Relative Humidity</span>
+                  <span class="status-text-indicator is-optimal" id="ov-hum-status">Normal</span>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-value mono-num" id="ov-hum-val">--.-</span>
+                  <span class="metric-unit">%RH</span>
+                </div>
+                <div class="range-track" aria-hidden="true">
+                  <div class="range-optimal-zone" id="ov-hum-zone"></div>
+                  <div class="range-marker" id="ov-hum-marker"></div>
+                </div>
+                <div class="metric-footer">
+                  <span id="ov-hum-target">Target: 80 – 92 %</span>
+                  <span class="mono-num" id="ov-hum-delta">Δ 0.0 %</span>
+                </div>
+              </article>
+
+              <article class="panel metric-card">
+                <div class="metric-card-top">
+                  <span class="metric-label">CO₂ Concentration</span>
+                  <span class="status-text-indicator is-optimal" id="ov-co2-status">Normal</span>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-value mono-num" id="ov-co2-val">---</span>
+                  <span class="metric-unit">ppm</span>
+                </div>
+                <div class="range-track" aria-hidden="true">
+                  <div class="range-optimal-zone" id="ov-co2-zone"></div>
+                  <div class="range-marker" id="ov-co2-marker"></div>
+                </div>
+                <div class="metric-footer">
+                  <span id="ov-co2-target">Target: &lt; 850 ppm</span>
+                  <span class="mono-num" id="ov-co2-delta">Δ 0 ppm</span>
+                </div>
+              </article>
+            </div>
+
+            <!-- Trend Graph + Daily Environmental Summary -->
+            <div class="overview-split-grid">
+              <article class="panel">
+                <div class="panel-header-row">
+                  <div>
+                    <h2 class="panel-title-sm">Environmental Trend Graph</h2>
+                    <p class="panel-subtitle">Temperature (°C) &amp; Relative Humidity (%RH) over recent simulated samples</p>
+                  </div>
+                  <div class="legend-inline">
+                    <span class="legend-item"><span class="legend-line is-dark"></span>Temp (°C)</span>
+                    <span class="legend-item"><span class="legend-line is-light"></span>Humidity (%)</span>
+                  </div>
+                </div>
+                <div class="chart-stage chart-stage-compact" id="ov-trend-chart"></div>
+              </article>
+
+              <article class="panel">
+                <div class="panel-header-row">
+                  <div>
+                    <h2 class="panel-title-sm">Daily Environmental Summary</h2>
+                    <p class="panel-subtitle" id="ov-summary-room-label">24-hour simulated range for RM-01</p>
+                  </div>
+                </div>
+                <dl class="compact-kv-list" id="ov-daily-summary-list"></dl>
+              </article>
+            </div>
+
+            <!-- Recent Sensor Readings Table -->
+            <article class="panel table-panel">
+              <div class="panel-header-row table-header-pad">
+                <div>
+                  <h2 class="panel-title-sm">Recent Sensor Readings</h2>
+                  <p class="panel-subtitle">Latest simulated telemetry across all monitored rooms</p>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" data-jump-page="analytics">
+                  Full Analytics &amp; CSV
+                </button>
+              </div>
+              <div class="table-scroll">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Time</th>
+                      <th scope="col">Room</th>
+                      <th scope="col" class="num-col">Temperature (°C)</th>
+                      <th scope="col" class="num-col">Humidity (%RH)</th>
+                      <th scope="col" class="num-col">CO₂ (ppm)</th>
+                      <th scope="col">Condition</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ov-recent-readings-body"></tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+
+          <!-- ==================== 2. LIVE ENVIRONMENT MONITORING ==================== -->
+          <section class="page-view" id="page-live" aria-labelledby="page-title">
+            <div class="panel toolbar-panel">
+              <div class="toolbar-group">
+                <span class="toolbar-label">Simulation Scenario</span>
+                <div class="segmented-control" role="group" aria-label="Simulation scenario">
+                  <button type="button" class="seg-btn is-active" data-scenario="normal">Normal</button>
+                  <button type="button" class="seg-btn" data-scenario="high_temp">High Temp</button>
+                  <button type="button" class="seg-btn" data-scenario="low_temp">Low Temp</button>
+                  <button type="button" class="seg-btn" data-scenario="low_humidity">Low Humidity</button>
+                  <button type="button" class="seg-btn" data-scenario="high_humidity">Excess Humidity</button>
+                  <button type="button" class="seg-btn" data-scenario="high_co2">High CO₂</button>
+                  <button type="button" class="seg-btn" data-scenario="sensor_fault">Sensor Fault</button>
+                  <button type="button" class="seg-btn" data-scenario="offline">ESP32 Offline</button>
+                </div>
+              </div>
+
+              <div class="toolbar-group">
+                <label class="checkbox-inline" for="live-compare-toggle">
+                  <input type="checkbox" id="live-compare-toggle" checked />
+                  <span>24h Baseline Comparison</span>
+                </label>
+                <div class="segmented-control" role="group" aria-label="Chart sample window">
+                  <button type="button" class="seg-btn is-active" data-window="15">15 pts</button>
+                  <button type="button" class="seg-btn" data-window="30">30 pts</button>
+                  <button type="button" class="seg-btn" data-window="60">60 pts</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Device Connection & Target Range Quick Bar -->
+            <div class="live-status-grid">
+              <article class="panel compact-bar-panel">
+                <div class="panel-header-row compact-row">
+                  <div>
+                    <span class="eyebrow-label">Telemetry Source</span>
+                    <strong class="panel-title-sm" id="live-device-name">ESP32-RM01 · RM-01 North Fruiting Bay</strong>
+                  </div>
+                  <span class="status-text-indicator is-optimal" id="live-device-badge">
+                    <span class="live-dot" aria-hidden="true"></span>
+                    Connected (Demo)
+                  </span>
+                </div>
+                <div class="meta-inline-row">
+                  <span>Last Update: <strong class="mono-num" id="live-last-timestamp">--:--:--</strong></span>
+                  <span aria-hidden="true">·</span>
+                  <span>Cycle: <strong class="mono-num">5s simulated</strong></span>
+                  <span aria-hidden="true">·</span>
+                  <span id="live-scenario-note">Normal fruiting curve active</span>
+                </div>
+              </article>
+
+              <article class="panel compact-bar-panel">
+                <div class="panel-header-row compact-row">
+                  <div>
+                    <span class="eyebrow-label">Configurable Target Ranges</span>
+                    <strong class="panel-title-sm">Live Threshold Bounds</strong>
+                  </div>
+                  <button type="button" class="btn btn-secondary btn-sm" id="live-apply-targets-btn">Apply Targets</button>
+                </div>
+                <div class="target-inputs-row">
+                  <label class="mini-input-group">
+                    <span>Temp (°C)</span>
+                    <div class="mini-pair">
+                      <input type="number" step="0.5" id="live-target-tmin" aria-label="Minimum target temperature" />
+                      <span>–</span>
+                      <input type="number" step="0.5" id="live-target-tmax" aria-label="Maximum target temperature" />
+                    </div>
+                  </label>
+                  <label class="mini-input-group">
+                    <span>Humidity (%)</span>
+                    <div class="mini-pair">
+                      <input type="number" step="1" id="live-target-hmin" aria-label="Minimum target humidity" />
+                      <span>–</span>
+                      <input type="number" step="1" id="live-target-hmax" aria-label="Maximum target humidity" />
+                    </div>
+                  </label>
+                  <label class="mini-input-group">
+                    <span>Max CO₂ (ppm)</span>
+                    <input type="number" step="50" id="live-target-co2max" aria-label="Maximum target CO2" />
+                  </label>
+                </div>
+              </article>
+            </div>
+
+            <!-- 3 Live Charts -->
+            <div class="live-charts-stack">
+              <article class="panel chart-panel">
+                <div class="chart-panel-header">
+                  <div>
+                    <h2 class="panel-title-sm">Live Temperature (°C)</h2>
+                    <p class="panel-subtitle" id="live-temp-subtitle">Optimal band shaded · Dashed line shows 24h baseline</p>
+                  </div>
+                  <div class="chart-stat-strip mono-num">
+                    <span>Current: <strong id="live-temp-now">--.- °C</strong></span>
+                    <span aria-hidden="true">·</span>
+                    <span>Min: <strong id="live-temp-min">--.-</strong></span>
+                    <span aria-hidden="true">·</span>
+                    <span>Max: <strong id="live-temp-max">--.-</strong></span>
+                  </div>
+                </div>
+                <div class="chart-stage" id="chart-live-temp"></div>
+              </article>
+
+              <article class="panel chart-panel">
+                <div class="chart-panel-header">
+                  <div>
+                    <h2 class="panel-title-sm">Live Relative Humidity (%RH)</h2>
+                    <p class="panel-subtitle" id="live-hum-subtitle">Moisture band shaded · Dashed line shows 24h baseline</p>
+                  </div>
+                  <div class="chart-stat-strip mono-num">
+                    <span>Current: <strong id="live-hum-now">--.- %</strong></span>
+                    <span aria-hidden="true">·</span>
+                    <span>Min: <strong id="live-hum-min">--.-</strong></span>
+                    <span aria-hidden="true">·</span>
+                    <span>Max: <strong id="live-hum-max">--.-</strong></span>
+                  </div>
+                </div>
+                <div class="chart-stage" id="chart-live-hum"></div>
+              </article>
+
+              <article class="panel chart-panel">
+                <div class="chart-panel-header">
+                  <div>
+                    <h2 class="panel-title-sm">Live CO₂ Concentration (ppm)</h2>
+                    <p class="panel-subtitle" id="live-co2-subtitle">Warning limit indicated · Dashed line shows 24h baseline</p>
+                  </div>
+                  <div class="chart-stat-strip mono-num">
+                    <span>Current: <strong id="live-co2-now">--- ppm</strong></span>
+                    <span aria-hidden="true">·</span>
+                    <span>Min: <strong id="live-co2-min">---</strong></span>
+                    <span aria-hidden="true">·</span>
+                    <span>Max: <strong id="live-co2-max">---</strong></span>
+                  </div>
+                </div>
+                <div class="chart-stage" id="chart-live-co2"></div>
+              </article>
+            </div>
+          </section>
+
+          <!-- ==================== 3. GROWING ROOM MANAGEMENT ==================== -->
+          <section class="page-view" id="page-rooms" aria-labelledby="page-title">
+            <div class="panel toolbar-panel">
+              <div class="toolbar-group">
+                <label class="search-field" for="rooms-search">
+                  <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                    <circle cx="9" cy="9" r="5.5" />
+                    <path d="M13.5 13.5L17 17" stroke-linecap="round" />
+                  </svg>
+                  <input type="search" id="rooms-search" placeholder="Search room ID, variety, or batch..." autocomplete="off" />
+                </label>
+
+                <div class="segmented-control" role="group" aria-label="Filter rooms by status">
+                  <button type="button" class="seg-btn is-active" data-room-filter="all">All Rooms</button>
+                  <button type="button" class="seg-btn" data-room-filter="normal">Normal</button>
+                  <button type="button" class="seg-btn" data-room-filter="warning">Warning</button>
+                  <button type="button" class="seg-btn" data-room-filter="critical">Critical</button>
+                </div>
+              </div>
+
+              <span class="toolbar-meta mono-num" id="rooms-count-label">4 growing rooms</span>
+            </div>
+
+            <div class="rooms-grid" id="rooms-cards-grid"></div>
+            <div class="panel empty-state is-hidden" id="rooms-empty-state">
+              <p>No growing rooms match your current search or filter.</p>
+              <button type="button" class="btn btn-secondary" id="reset-rooms-filter-btn">Reset Filter</button>
+            </div>
+          </section>
+
+          <!-- ==================== 4. CULTIVATION BATCH MANAGEMENT ==================== -->
+          <section class="page-view" id="page-batches" aria-labelledby="page-title">
+            <div class="panel toolbar-panel">
+              <div class="toolbar-group">
+                <label class="search-field" for="batches-search">
+                  <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                    <circle cx="9" cy="9" r="5.5" />
+                    <path d="M13.5 13.5L17 17" stroke-linecap="round" />
+                  </svg>
+                  <input type="search" id="batches-search" placeholder="Search batch ID, species, or notes..." autocomplete="off" />
+                </label>
+
+                <div class="segmented-control" role="group" aria-label="Filter batches by stage">
+                  <button type="button" class="seg-btn is-active" data-batch-filter="all">All</button>
+                  <button type="button" class="seg-btn" data-batch-filter="Incubation">Incubation</button>
+                  <button type="button" class="seg-btn" data-batch-filter="Pinning">Pinning</button>
+                  <button type="button" class="seg-btn" data-batch-filter="Fruiting">Fruiting</button>
+                  <button type="button" class="seg-btn" data-batch-filter="Harvest Ready">Harvest Ready</button>
+                </div>
+              </div>
+
+              <button type="button" class="btn btn-primary" id="toggle-new-batch-btn">+ Add Cultivation Batch</button>
+            </div>
+
+            <!-- Collapsible New Batch Form -->
+            <form class="panel batch-form-panel is-hidden" id="new-batch-form">
+              <div class="panel-header-row">
+                <div>
+                  <h2 class="panel-title-sm">Register New Cultivation Batch</h2>
+                  <p class="panel-subtitle">Log substrate preparation, inoculation date, and expected harvest window</p>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" id="cancel-new-batch-btn">Cancel</button>
+              </div>
+              <div class="form-grid-3">
+                <label class="form-field">
+                  <span>Batch ID</span>
+                  <input type="text" id="nb-id" placeholder="e.g. BATCH-2026-048" required />
+                </label>
+                <label class="form-field">
+                  <span>Mushroom Species</span>
+                  <input type="text" id="nb-species" placeholder="e.g. Blue Oyster" required />
+                </label>
+                <label class="form-field">
+                  <span>Growing Room</span>
+                  <select id="nb-room"></select>
+                </label>
+                <label class="form-field">
+                  <span>Substrate Prep Date</span>
+                  <input type="date" id="nb-prep-date" required />
+                </label>
+                <label class="form-field">
+                  <span>Inoculation Date</span>
+                  <input type="date" id="nb-inoc-date" required />
+                </label>
+                <label class="form-field">
+                  <span>Expected Harvest Date</span>
+                  <input type="date" id="nb-harvest-date" required />
+                </label>
+                <label class="form-field">
+                  <span>Growth Stage</span>
+                  <select id="nb-stage">
+                    <option value="Incubation">Incubation</option>
+                    <option value="Pinning">Pinning</option>
+                    <option value="Fruiting">Fruiting</option>
+                    <option value="Harvest Ready">Harvest Ready</option>
+                  </select>
+                </label>
+                <label class="form-field form-span-2">
+                  <span>Notes &amp; Observations</span>
+                  <input type="text" id="nb-notes" placeholder="Substrate composition, spawn ratio, mycelial colonization notes..." />
+                </label>
+              </div>
+              <div class="form-actions-end">
+                <button type="submit" class="btn btn-primary">Save Batch</button>
+              </div>
+            </form>
+
+            <!-- Batches Table -->
+            <article class="panel table-panel">
+              <div class="table-scroll">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Batch ID</th>
+                      <th scope="col">Species</th>
+                      <th scope="col">Room</th>
+                      <th scope="col">Substrate Prep</th>
+                      <th scope="col">Inoculation</th>
+                      <th scope="col">Growth Stage</th>
+                      <th scope="col">Expected Harvest</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Notes &amp; Observations</th>
+                    </tr>
+                  </thead>
+                  <tbody id="batches-table-body"></tbody>
+                </table>
+              </div>
+              <div class="empty-state is-hidden" id="batches-empty-state">
+                <p>No cultivation batches match the current search or stage filter.</p>
+                <button type="button" class="btn btn-secondary" id="reset-batches-filter-btn">Reset Filters</button>
+              </div>
+            </article>
+          </section>
+
+          <!-- ==================== 5. ENVIRONMENTAL ANALYTICS ==================== -->
+          <section class="page-view" id="page-analytics" aria-labelledby="page-title">
+            <div class="panel toolbar-panel">
+              <div class="toolbar-group">
+                <label class="date-filter-field">
+                  <span>From</span>
+                  <input type="date" id="an-date-start" />
+                </label>
+                <label class="date-filter-field">
+                  <span>To</span>
+                  <input type="date" id="an-date-end" />
+                </label>
+
+                <div class="segmented-control" role="group" aria-label="Quick date range presets">
+                  <button type="button" class="seg-btn" data-date-preset="7">7D</button>
+                  <button type="button" class="seg-btn is-active" data-date-preset="14">14D</button>
+                  <button type="button" class="seg-btn" data-date-preset="30">30D</button>
+                </div>
+
+                <label class="sr-only" for="an-room-filter">Analytics Room Filter</label>
+                <select id="an-room-filter" class="room-select"></select>
+              </div>
+
+              <div class="toolbar-group">
+                <span class="toolbar-meta mono-num" id="an-days-count">14 days</span>
+                <button type="button" class="btn btn-primary" id="an-export-csv-btn">Download CSV Report</button>
+              </div>
+            </div>
+
+            <!-- Analytics Min / Max / Avg & Stability Summary -->
+            <div class="kpi-grid-4">
+              <article class="panel kpi-panel">
+                <span class="metric-label">Temperature (Min / Avg / Max)</span>
+                <strong class="an-stat-triple mono-num" id="an-temp-summary">-- / -- / -- °C</strong>
+                <span class="kpi-footnote">Filtered range summary</span>
+              </article>
+              <article class="panel kpi-panel">
+                <span class="metric-label">Humidity (Min / Avg / Max)</span>
+                <strong class="an-stat-triple mono-num" id="an-hum-summary">-- / -- / -- %</strong>
+                <span class="kpi-footnote">Moisture stability envelope</span>
+              </article>
+              <article class="panel kpi-panel">
+                <span class="metric-label">CO₂ (Min / Avg / Max)</span>
+                <strong class="an-stat-triple mono-num" id="an-co2-summary">-- / -- / -- ppm</strong>
+                <span class="kpi-footnote">Ventilation exchange profile</span>
+              </article>
+              <article class="panel kpi-panel">
+                <span class="metric-label">Environmental Stability</span>
+                <strong class="kpi-value mono-num is-optimal-text" id="an-stability-score">--%</strong>
+                <span class="kpi-footnote" id="an-stability-note">Time within optimal target bounds</span>
+              </article>
+            </div>
+
+            <!-- Analytics Charts -->
+            <div class="analytics-charts-grid">
+              <article class="panel chart-panel">
+                <div class="chart-panel-header">
+                  <div>
+                    <h2 class="panel-title-sm">Daily Temperature Trends (°C)</h2>
+                    <p class="panel-subtitle">Daily average with min–max variance envelope</p>
+                  </div>
+                </div>
+                <div class="chart-stage" id="chart-an-temp"></div>
+              </article>
+
+              <article class="panel chart-panel">
+                <div class="chart-panel-header">
+                  <div>
+                    <h2 class="panel-title-sm">Weekly Humidity Trends (%RH)</h2>
+                    <p class="panel-subtitle">Daily average relative humidity across selected window</p>
+                  </div>
+                </div>
+                <div class="chart-stage" id="chart-an-hum"></div>
+              </article>
+            </div>
+
+            <article class="panel chart-panel">
+              <div class="chart-panel-header">
+                <div>
+                  <h2 class="panel-title-sm">CO₂ Concentration History (ppm)</h2>
+                  <p class="panel-subtitle">Daily average CO₂ levels compared against ventilation warning limit</p>
+                </div>
+              </div>
+              <div class="chart-stage" id="chart-an-co2"></div>
+            </article>
+
+            <!-- Historical Data Table -->
+            <article class="panel table-panel">
+              <div class="panel-header-row table-header-pad">
+                <div>
+                  <h2 class="panel-title-sm">Filtered Historical Log</h2>
+                  <p class="panel-subtitle">Daily aggregated environmental readings (simulated dataset)</p>
+                </div>
+                <label class="search-field" for="an-table-search">
+                  <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                    <circle cx="9" cy="9" r="5.5" />
+                    <path d="M13.5 13.5L17 17" stroke-linecap="round" />
+                  </svg>
+                  <input type="search" id="an-table-search" placeholder="Filter by date or status..." autocomplete="off" />
+                </label>
+              </div>
+              <div class="table-scroll">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Room</th>
+                      <th scope="col" class="num-col">Avg Temp (°C)</th>
+                      <th scope="col" class="num-col">Min / Max (°C)</th>
+                      <th scope="col" class="num-col">Avg Humidity (%)</th>
+                      <th scope="col" class="num-col">Avg CO₂ (ppm)</th>
+                      <th scope="col" class="num-col">Stability</th>
+                    </tr>
+                  </thead>
+                  <tbody id="an-table-body"></tbody>
+                </table>
+              </div>
+              <div class="empty-state is-hidden" id="an-empty-state">
+                <p>No records exist within the selected date range.</p>
+              </div>
+            </article>
+          </section>
+
+          <!-- ==================== 6. ALERT MANAGEMENT ==================== -->
+          <section class="page-view" id="page-alerts" aria-labelledby="page-title">
+            <div class="kpi-grid-4">
+              <article class="panel kpi-panel">
+                <span class="metric-label">Active Alerts</span>
+                <strong class="kpi-value mono-num" id="al-active-count">0</strong>
+                <span class="kpi-footnote">Unresolved notifications</span>
+              </article>
+              <article class="panel kpi-panel">
+                <span class="metric-label">Critical</span>
+                <strong class="kpi-value mono-num is-critical-text" id="al-critical-count">0</strong>
+                <span class="kpi-footnote">Immediate attention required</span>
+              </article>
+              <article class="panel kpi-panel">
+                <span class="metric-label">Warning</span>
+                <strong class="kpi-value mono-num is-warning-text" id="al-warning-count">0</strong>
+                <span class="kpi-footnote">Threshold drift detected</span>
+              </article>
+              <article class="panel kpi-panel">
+                <span class="metric-label">Normal / Resolved</span>
+                <strong class="kpi-value mono-num is-optimal-text" id="al-normal-count">0</strong>
+                <span class="kpi-footnote">Cleared historical events</span>
+              </article>
+            </div>
+
+            <div class="panel toolbar-panel">
+              <div class="toolbar-group">
+                <label class="search-field" for="al-search">
+                  <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                    <circle cx="9" cy="9" r="5.5" />
+                    <path d="M13.5 13.5L17 17" stroke-linecap="round" />
+                  </svg>
+                  <input type="search" id="al-search" placeholder="Search alerts by room, sensor, or type..." autocomplete="off" />
+                </label>
+
+                <div class="segmented-control" role="group" aria-label="Filter alerts by severity">
+                  <button type="button" class="seg-btn is-active" data-alert-severity="all">All</button>
+                  <button type="button" class="seg-btn" data-alert-severity="Critical">Critical</button>
+                  <button type="button" class="seg-btn" data-alert-severity="Warning">Warning</button>
+                  <button type="button" class="seg-btn" data-alert-severity="Normal">Normal</button>
+                </div>
+              </div>
+
+              <div class="toolbar-group">
+                <button type="button" class="btn btn-secondary" id="al-resolve-all-btn">Resolve All Active</button>
+                <button type="button" class="btn btn-secondary" id="al-clear-resolved-btn">Clear Resolved</button>
+              </div>
+            </div>
+
+            <article class="panel">
+              <div class="panel-header-row">
+                <div>
+                  <h2 class="panel-title-sm">Alert History &amp; Active Events</h2>
+                  <p class="panel-subtitle">
+                    Monitors high/low temperature, low/excessive humidity, high CO₂, sensor failures, and ESP32 disconnections
+                  </p>
+                </div>
+              </div>
+              <ul class="alerts-feed" id="alerts-feed"></ul>
+              <div class="empty-state is-hidden" id="alerts-empty-state">
+                <p>No alerts match the current search or severity filter.</p>
+              </div>
+            </article>
+          </section>
+
+          <!-- ==================== 7. DEVICE MANAGEMENT ==================== -->
+          <section class="page-view" id="page-devices" aria-labelledby="page-title">
+            <div class="panel toolbar-panel">
+              <div class="toolbar-group">
+                <label class="search-field" for="dev-search">
+                  <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                    <circle cx="9" cy="9" r="5.5" />
+                    <path d="M13.5 13.5L17 17" stroke-linecap="round" />
+                  </svg>
+                  <input type="search" id="dev-search" placeholder="Search ESP32 ID, location, or sensor..." autocomplete="off" />
+                </label>
+
+                <div class="segmented-control" role="group" aria-label="Filter devices by connection status">
+                  <button type="button" class="seg-btn is-active" data-dev-filter="all">All Devices</button>
+                  <button type="button" class="seg-btn" data-dev-filter="Connected">Connected</button>
+                  <button type="button" class="seg-btn" data-dev-filter="Disconnected">Disconnected</button>
+                  <button type="button" class="seg-btn" data-dev-filter="Sensor Fault">Sensor Fault</button>
+                </div>
+              </div>
+
+              <button type="button" class="btn btn-secondary" id="dev-ping-all-btn">Ping All Nodes</button>
+            </div>
+
+            <div class="devices-grid" id="devices-cards-grid"></div>
+
+            <!-- Hardware Integration Documentation -->
+            <article class="panel">
+              <div class="panel-header-row">
+                <div>
+                  <h2 class="panel-title-sm">ESP32 Hardware Integration Contract</h2>
+                  <p class="panel-subtitle">
+                    Sensor acquisition is cleanly decoupled inside <code>SensorDataAdapter</code> in <code>script.js</code>.
+                    Replace <code>DemoSensorProvider</code> with <code>Esp32HttpProvider</code> when deploying physical nodes.
+                  </p>
+                </div>
+              </div>
+              <div class="integration-split">
+                <div class="code-preview-block">
+                  <div class="code-preview-title">Live Simulated Payload Schema (JSON)</div>
+                  <pre class="code-pre mono-num" id="dev-json-preview">{}</pre>
+                </div>
+                <div class="code-preview-block">
+                  <div class="code-preview-title">ESP32 Adapter Interface (script.js)</div>
+                  <pre class="code-pre mono-num">const SensorConfig = {
+  mode: "DEMO", // Switch to "ESP32_HTTP"
+  endpoints: {
+    "RM-01": "http://192.168.1.41/api/readings",
+    "RM-02": "http://192.168.1.42/api/readings"
+  },
+  pollIntervalMs: 5000
+};</pre>
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <!-- ==================== 8. SETTINGS ==================== -->
+          <section class="page-view" id="page-settings" aria-labelledby="page-title">
+            <div class="settings-grid">
+              <!-- Environmental Thresholds -->
+              <form class="panel" id="settings-thresholds-form">
+                <div class="panel-header-row">
+                  <div>
+                    <h2 class="panel-title-sm">Environmental Threshold Settings</h2>
+                    <p class="panel-subtitle">Global alert &amp; target bounds applied across monitoring and analytics</p>
+                  </div>
+                </div>
+                <div class="form-grid-2">
+                  <label class="form-field">
+                    <span>Min Temperature (°C)</span>
+                    <input type="number" step="0.5" id="set-temp-min" required />
+                  </label>
+                  <label class="form-field">
+                    <span>Max Temperature (°C)</span>
+                    <input type="number" step="0.5" id="set-temp-max" required />
+                  </label>
+                  <label class="form-field">
+                    <span>Min Humidity (%RH)</span>
+                    <input type="number" step="1" id="set-hum-min" required />
+                  </label>
+                  <label class="form-field">
+                    <span>Max Humidity (%RH)</span>
+                    <input type="number" step="1" id="set-hum-max" required />
+                  </label>
+                  <label class="form-field">
+                    <span>CO₂ Warning Threshold (ppm)</span>
+                    <input type="number" step="50" id="set-co2-warn" required />
+                  </label>
+                  <label class="form-field">
+                    <span>CO₂ Critical Threshold (ppm)</span>
+                    <input type="number" step="50" id="set-co2-crit" required />
+                  </label>
+                </div>
+                <div class="settings-actions-row">
+                  <span class="settings-feedback" id="settings-thresh-msg" role="status"></span>
+                  <div class="toolbar-group">
+                    <button type="button" class="btn btn-secondary" id="reset-thresholds-btn">Reset Defaults</button>
+                    <button type="submit" class="btn btn-primary">Save Thresholds</button>
+                  </div>
+                </div>
+              </form>
+
+              <!-- Alert & Dashboard Preferences -->
+              <div class="panel settings-stack">
+                <div>
+                  <h2 class="panel-title-sm">Alert &amp; Dashboard Preferences</h2>
+                  <p class="panel-subtitle">Control notification triggers and live simulation refresh cadence</p>
+                </div>
+
+                <div class="prefs-list">
+                  <label class="pref-toggle-row">
+                    <span>High &amp; Low Temperature Warnings</span>
+                    <input type="checkbox" id="pref-temp-alerts" checked />
+                  </label>
+                  <label class="pref-toggle-row">
+                    <span>Low &amp; Excessive Humidity Warnings</span>
+                    <input type="checkbox" id="pref-hum-alerts" checked />
+                  </label>
+                  <label class="pref-toggle-row">
+                    <span>High CO₂ Concentration Warnings</span>
+                    <input type="checkbox" id="pref-co2-alerts" checked />
+                  </label>
+                  <label class="pref-toggle-row">
+                    <span>Sensor Failure &amp; ESP32 Disconnection Alerts</span>
+                    <input type="checkbox" id="pref-device-alerts" checked />
+                  </label>
+                </div>
+
+                <div class="form-grid-2">
+                  <label class="form-field">
+                    <span>Simulated Poll Interval</span>
+                    <select id="pref-poll-interval">
+                      <option value="5000">5 seconds (Default Demo)</option>
+                      <option value="10000">10 seconds</option>
+                      <option value="15000">15 seconds</option>
+                    </select>
+                  </label>
+                  <label class="form-field">
+                    <span>Default Focus Room</span>
+                    <select id="pref-default-room"></select>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project Information -->
+            <article class="panel">
+              <div class="panel-header-row">
+                <div>
+                  <h2 class="panel-title-sm">Project Information</h2>
+                  <p class="panel-subtitle">MycoMonitor — Smart Mushroom Cultivation Monitoring System</p>
+                </div>
+                <span class="demo-mode-tag">DEMO MODE</span>
+              </div>
+              <div class="project-info-grid">
+                <div>
+                  <h3 class="info-subheading">System Overview</h3>
+                  <p class="info-paragraph">
+                    MycoMonitor is an agricultural technology monitoring platform designed to oversee multi-room mushroom
+                    cultivation environments. It tracks temperature, relative humidity, and CO₂ concentration while
+                    managing cultivation batches, environmental analytics, threshold alerts, and ESP32 sensor nodes.
+                  </p>
+                </div>
+                <dl class="compact-kv-list">
+                  <div class="kv-row">
+                    <dt>Architecture</dt>
+                    <dd>Static HTML5 · CSS3 · Vanilla JS</dd>
+                  </div>
+                  <div class="kv-row">
+                    <dt>Deployment Target</dt>
+                    <dd>GitHub Pages / Local Browser</dd>
+                  </div>
+                  <div class="kv-row">
+                    <dt>Target MCU</dt>
+                    <dd class="mono-num">ESP32-WROOM-32D + DHT22 + SCD40</dd>
+                  </div>
+                  <div class="kv-row">
+                    <dt>Data Integrity Notice</dt>
+                    <dd>All live values are simulated in DEMO MODE</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
